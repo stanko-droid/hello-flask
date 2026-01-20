@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
     return '<h1>Välkommen till min Flask-app</h1><p>Gå till <a href="/about">Om mig</a></p>'
-    return 'Hej, världen!!!!'
+    return 'Hej, kodare!'   
 
 @app.route('/about')
 def about():
