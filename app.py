@@ -1,12 +1,30 @@
 from flask import Flask, jsonify
+import os  # <--- NYTT: Vi importerar 'os' för att kunna hitta filer
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def hello():
-    return '<h1>Välkommen till min Flask-app</h1><p>Gå till <a href="/about">Om mig</a></p>'
-    return 'Hej, kodare!'   
+    # Här försöker vi läsa innehållet i din footer-fil
+    try:
+        with open('content/_footer.md', 'r', encoding='utf-8') as f:
+            footer_content = f.read()
+    except FileNotFoundError:
+        footer_content = "Kunde inte hitta sidfoten..."
+
+    # Vi bygger ihop HTML-koden + footer-texten
+    # <hr> betyder "Horizontal Rule" (ett streck)
+    # <pre> gör att texten behåller sina radbrytningar
+    html_code = f"""
+    <h1>Välkommen till min Flask-app</h1>
+    <p>Gå till <a href="/about">Om mig</a></p>
+    <br>
+    <hr>
+    <footer>
+        <pre>{footer_content}</pre>
+    </footer>
+    """
+    return html_code
 
 @app.route('/about')
 def about():
@@ -14,14 +32,12 @@ def about():
 
 @app.route('/api/profile')
 def profile():
-    # Detta är en Python "Dictionary" (nyckel-värde-par)
     data = {
         "namn": "Ditt Namn",
         "roll": "DevOps Student",
         "skills": ["Python", "Flask", "Git"],
         "aktiv": True
     }
-    # jsonify gör om dictionaryn till JSON-format som webben förstår
     return jsonify(data)
 
 if __name__ == '__main__':
